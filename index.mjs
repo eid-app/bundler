@@ -19,8 +19,6 @@ const APP_NAME = userPackageJson.name || 'app';
 const SRC_MAC_ICON = path.join(USER_CWD, userPackageJson.bundler?.icons?.mac ?? 'AppIcon.icns');
 
 const targets = [
-//   { id: 'x86_64-windows-gnu', app: `${APP_NAME}_win64.exe` },
-//   { id: 'x86-windows-gnu', app: `${APP_NAME}_win32.exe` },
 //   { id: 'x86_64-linux-gnu', app: `${APP_NAME}_linux64` },
 //   { id: 'x86-linux-gnu', app: `${APP_NAME}_linux32` },
   { id: 'x86_64-macos', app: `${APP_NAME}_mac_intel`, isMac: true, bundleSuffix: 'mac_intel' },

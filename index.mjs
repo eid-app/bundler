@@ -16,7 +16,7 @@ const SRC_MAC_TEMPLATE = path.join(__dirname, 'mac.app');
 const userPackageJson = JSON.parse(readFileSync(USER_PKG_PATH, 'utf8'));
 
 const APP_NAME = userPackageJson.name || 'app';
-const SRC_MAC_ICON = path.join(USER_CWD, userPackageJson.quickJs?.icons?.mac ?? 'AppIcon.icns');
+const SRC_MAC_ICON = path.join(USER_CWD, userPackageJson.bundler?.icons?.mac ?? 'AppIcon.icns');
 
 const targets = [
 //   { id: 'x86_64-windows-gnu', app: `${APP_NAME}_win64.exe` },

@@ -18,9 +18,16 @@
 	<string>#APP_NAME#</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	<key>CFBundleURLSchemes</key>
+	<key>CFBundleURLTypes</key>
 	<array>
-		<string>#APP_NAME#</string>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>io.github.bundler-app.#APP_NAME#.scheme</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>#APP_NAME#</string>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

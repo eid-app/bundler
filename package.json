@@ -1,6 +1,6 @@
 {
   "name": "bundler-app",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A zero-config Node.js CLI utility to package native binaries into distributable application bundles.",
   "type": "module",
   "main": "index.mjs",

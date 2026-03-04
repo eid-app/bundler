@@ -5,7 +5,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>#APP_NAME#</string>
 	<key>CFBundleExecutable</key>
-	<string>#APP_NAME#</string>
+	<string>launcher</string>
 	<key>CFBundleIconFile</key>
 	<string>AppIcon</string>
 	<key>CFBundleIconName</key>

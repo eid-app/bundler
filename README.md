@@ -8,6 +8,7 @@ Designed for developers using cross-compilation tools, this bundler automates th
 
 * **Dual Architecture**: Supports both `x86_64` (Intel) and `aarch64` (Apple Silicon) macOS targets.
 * **Smart Manifests**: Dynamically injects your application name and icon into the `Info.plist`.
+* **URL Scheme Support**: Load your application using application name as URL scheme (uses swift based compiled launcher).
 * **Permissions**: Automatically handles `chmod +x` for the generated binaries inside the bundle.
 * **Linux Ready**: Architected to support Linux packaging formats in future updates.
 

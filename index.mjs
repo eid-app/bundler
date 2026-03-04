@@ -4,6 +4,7 @@ import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
 import { readFileSync, cpSync, mkdirSync, writeFileSync, existsSync } from 'fs';
 import path from 'path';
+import os from 'os';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const USER_CWD = process.cwd();
@@ -17,6 +18,9 @@ const userPackageJson = JSON.parse(readFileSync(USER_PKG_PATH, 'utf8'));
 
 const APP_NAME = userPackageJson.name || 'app';
 const SRC_MAC_ICON = path.join(USER_CWD, userPackageJson.bundler?.icons?.mac ?? 'AppIcon.icns');
+const LAUNCHER = 'launcher';
+const SWIFT_SRC = path.join(__dirname, `${LAUNCHER}.swift`);
+const SWIFT_BIN = path.join(__dirname, LAUNCHER);
 
 const targets = [
 //   { id: 'x86_64-linux-gnu', app: `${APP_NAME}_linux64` },
@@ -25,14 +29,34 @@ const targets = [
   { id: 'aarch64-macos', app: `${APP_NAME}_mac_arm`, isMac: true, bundleSuffix: 'mac_arm' }
 ];
 
+if ('darwin' === os.platform()) {
+    // ==========================================================
+    // PACKAGING MACOS BUNDLE
+    // ==========================================================
+    console.log(`\n=== Compile MacOS Launcher ===`);
+    let hasSwift = false;
+    try {
+        execSync('which swiftc', { stdio: 'ignore' });
+        hasSwift = true;
+    } catch (e) {}
+
+    if (hasSwift) {
+        execSync(`swiftc "${SWIFT_SRC}" -target x86_64-apple-macos10.13 -o "${SWIFT_BIN}_x86_64"`);
+        execSync(`swiftc "${SWIFT_SRC}" -target arm64-apple-macos11.0 -o "${SWIFT_BIN}_arm64"`);
+        execSync(`lipo -create "${SWIFT_BIN}_x86_64" "${SWIFT_BIN}_arm64" -output "${SWIFT_BIN}"`)
+        console.log(`✅ Launcher ready: ${SWIFT_BIN}`);
+    }
+}
+
 // ==========================================================
 // PACKAGING MACOS BUNDLE
 // ==========================================================
-console.log(`\n=== STAGE 3: Packaging MacOS Bundles ===`);
+console.log(`\n=== Packaging MacOS Bundles ===`);
 targets.filter(t => t.isMac).forEach(target => {
     const bundlePath = path.join(DIST_DIR, `${APP_NAME}_${target.bundleSuffix}.app`);
     const destIcon = path.join(bundlePath, 'Contents', 'Resources', 'AppIcon.icns');
     const destBinary = path.join(bundlePath, 'Contents', 'MacOS', APP_NAME);
+    const launcherBinary = path.join(bundlePath, 'Contents', 'MacOS', LAUNCHER);
     const infoPlist = path.join(bundlePath, 'Contents', 'Info.plist');
     try {
         const plist = readFileSync(path.join(SRC_MAC_TEMPLATE, 'Contents', 'Info.plist')).toString();
@@ -43,6 +67,7 @@ targets.filter(t => t.isMac).forEach(target => {
         writeFileSync(infoPlist, plist.replaceAll('#APP_NAME#', APP_NAME));
         mkdirSync(path.dirname(destBinary), { recursive: true });
         cpSync(path.join(DIST_DIR, target.app), destBinary);
+        cpSync(SWIFT_BIN, launcherBinary);
         execSync(`chmod +x "${destBinary}"`);
         console.log(`✅ Bundle ready: ${bundlePath}`);
     } catch (err) {
